@@ -35,18 +35,23 @@ void tabla(int dimensiune,int latime,int inaltime){
 
 }
 
+
 void alegeredimensiune(int &dimensiune,int &latime, int&inaltime){
 
-    outtextxy(760,70,"Alege dimensiunea tablei de joc");
+    int midx,midy;
+    midx=getmaxwidth()/2;
+    midy=getmaxheight()/2;
 
-    rectangle(750,150,1100,230);
-    outtextxy((1100+750)/2-15,(150+230)/2-10,"4x4");
+    outtextxy(midx-170,70,"Alege dimensiunea tablei de joc");
 
-    rectangle(750,250,1100,330);
-    outtextxy((1100+750)/2-15,(250+330)/2-10,"6x6");
+    rectangle(midx-200,150,midx+200,230);
+    outtextxy(midx-15,(150+230)/2-10,"4x4");
 
-    rectangle(750,350,1100,430);
-    outtextxy((1100+750)/2-15,(350+430)/2-10,"8x8");
+    rectangle(midx-200,250,midx+200,330);
+    outtextxy(midx-15,(250+330)/2-10,"6x6");
+
+    rectangle(midx-200,350,midx+200,430);
+    outtextxy(midx-15,(350+430)/2-10,"8x8");
     int x,y;
     while(true){
     if(ismouseclick(WM_LBUTTONDOWN)!=0){
@@ -54,21 +59,21 @@ void alegeredimensiune(int &dimensiune,int &latime, int&inaltime){
         x=mousex();
         y=mousey();
 
-        if((x>=750 && x<=1100 && y>=150 && y<=230)!=0){ //optiuni meniu
+        if((x>=midx-200 && x<=midx+200 && y>=150 && y<=230)!=0){ //optiuni meniu
             dimensiune=4;
             latime=800;
             inaltime=800;
             break;
         }
 
-        if((x>=750 && x<=1100 && y>=250 && y<=330)!=0){
+        if((x>=midx-200 && x<=midx+200 && y>=250 && y<=330)!=0){
             dimensiune=6;
             latime=800;
             inaltime=800;
             break;
         }
 
-        if((x>=750 && x<=1100 && y>=350 && y<=430)!=0){
+        if((x>=midx-200 && x<=midx+200 && y>=350 && y<=430)!=0){
             dimensiune=8;
             latime=800;
             inaltime=800;
@@ -82,17 +87,24 @@ void alegeredimensiune(int &dimensiune,int &latime, int&inaltime){
 
 void meniu(int &alegere){
 
+    int midx,midy;
+    midx=getmaxwidth()/2;
+    midy=getmaxheight()/2;
+
     settextstyle(BOLD_FONT,HORIZ_DIR,1);
-    outtextxy(900,70,"Impas");
+    outtextxy(midx-20,70,"Impas");
 
-    rectangle(750,150,1100,230);
-    outtextxy((1100+750)/2-100,(150+230)/2-10,"Jucator vs Jucator");
+    rectangle(midx-200,150,midx+200,230);
+    outtextxy(midx-100,(150+230)/2-10,"Jucator vs Jucator");
 
-    rectangle(750,250,1100,330);
-    outtextxy((1100+750)/2-100,(250+330)/2-10,"Jucator vs Calculator");
+    rectangle(midx-200,250,midx+200,330);
+    outtextxy(midx-100,(250+330)/2-10,"Jucator vs Calculator");
 
-    rectangle(750,350,1100,430);
-    outtextxy((1100+750)/2-35,(350+430)/2-10,"Iesire");
+    rectangle(midx-200,350,midx+200,430);
+    outtextxy(midx-25,(350+430)/2-10,"Scor");
+
+    rectangle(midx-200,450,midx+200,530);
+    outtextxy(midx-35,(450+530)/2-10,"Iesire");
 
     int x,y;
     while(true){
@@ -101,19 +113,31 @@ void meniu(int &alegere){
         x=mousex();
         y=mousey();
 
-        if((x>=750 && x<=1100 && y>=150 && y<=230)!=0){ //optiuni meniu
+        if((x>=midx-200 && x<=midx+200 && y>=150 && y<=230)!=0){ //optiuni meniu
             cleardevice();
             alegere=1;
             break;
         }
 
-        if((x>=750 && x<=1100 && y>=250 && y<=330)!=0){
+        if((x>=midx-200 && x<=midx+200 && y>=250 && y<=330)!=0){
             cleardevice();
             alegere=2;
             break;
         }
 
-        if((x>=750 && x<=1100 && y>=350 && y<=430)!=0){
+        if((x>=midx-200 && x<=midx+200 && y>=350 && y<=430)!=0){
+            cleardevice();
+            outtextxy(midx-50,60,"Tabel scor");
+
+            outtextxy(midx-225,130,"Jucator vs Jucator");
+            rectangle(midx-225,150,midx-25,700);
+
+            outtextxy(midx+15,130,"Jucator vs Calculator");
+            rectangle(midx+25,150,midx+225,700);
+
+        }
+
+        if((x>=midx-200 && x<=midx+200 && y>=450 && y<=530)!=0){
             closegraph();
         }
 
@@ -125,10 +149,8 @@ void meniu(int &alegere){
 }
 
 int main(){
-    int maxx,maxy;
-    maxx= getmaxwidth();
-    maxy= getmaxheight();
-    initwindow(maxx,maxy);
+
+    initwindow(getmaxwidth(),getmaxheight());
 
     meniu(alegere);
     if(alegere==1){
