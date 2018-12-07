@@ -9,7 +9,7 @@ ofstream fout("pvp.txt",ios_base::app);
 ifstream gin("pvc.txt");
 ofstream gout("pvc.txt",ios_base::app);
 
-int pozitiex,pozitiey,latime,inaltime,latura,dimensiune,alegere;
+int pozitiex,pozitiey,latime,inaltime,latura,dimensiune,alegere=0;
 bool gata;
 
 void resetarescor(int alegere){
@@ -44,47 +44,47 @@ void afisarescor(){
 
     outtextxy(midx-50,60,"Tabel scor");
 
-    outtextxy(midx-225,130,"Jucator vs Jucator");
-    rectangle(midx-225,150,midx-25,700);
+    outtextxy(midx-290,130,"Jucator vs Jucator");
+    rectangle(midx-350,150,midx-25,700);
 
-    outtextxy(midx+15,130,"Jucator vs Calculator");
-    rectangle(midx+25,150,midx+225,700);
+    outtextxy(midx+70,130,"Jucator vs Calculator");
+    rectangle(midx+25,150,midx+350,700);
 
     int i=0,j=0,ip,jp,x,y,a1[20][2],a2[20][2];
-    char v[20];
+    char v[50];
 
     while(fin>>x>>y){
         a1[i][0]=x;
         a1[i][1]=y;
         i++;
-        if(i>=19) break;
+        if(i>19) break;
     }
     while(gin>>x>>y){
         a2[j][0]=x;
         a2[j][1]=y;
         j++;
-        if(j>=19) break;
+        if(j>19) break;
     }
     i--;j--;
-    ip=160;jp=160;
+    ip=jp=midy-370;
 
     while(i>=0){
         if(a1[i][0]>a1[i][1])
-        sprintf(v,"J1 a castigat (%d-%d)",a1[i][0],a1[i][1]);
+        sprintf(v,"Jucatorul 1 a castigat (%d-%d)",a1[i][0],a1[i][1]);
         if(a1[i][0]<a1[i][1])
-        sprintf(v,"J2 a castigat (%d-%d)",a1[i][0],a1[i][1]);
+        sprintf(v,"Jucatorul 2 a castigat (%d-%d)",a1[i][0],a1[i][1]);
         if(a1[i][0]==a1[i][1])
         sprintf(v,"Remiza (%d-%d)",a1[i][0],a1[i][1]);
 
-        outtextxy(midx-220,ip,v);
+        outtextxy(midx-345,ip,v);
         i--;
         ip+=20;
     }
     while(j>=0){
         if(a2[j][0]>a2[j][1])
-        sprintf(v,"J1 a castigat (%d-%d)",a2[j][0],a2[j][1]);
+        sprintf(v,"Jucatorul a castigat (%d-%d)",a2[j][0],a2[j][1]);
         if(a2[j][0]<a2[j][1])
-        sprintf(v,"C a castigat (%d-%d)",a2[j][0],a2[j][1]);
+        sprintf(v,"Calculatorul a castigat (%d-%d)",a2[j][0],a2[j][1]);
         if(a2[j][0]==a2[j][1])
         sprintf(v,"Remiza (%d-%d)",a2[j][0],a2[j][1]);
 
@@ -117,10 +117,10 @@ void tabla(int dimensiune,int latime,int inaltime){
     int i,j;
 
     latura=latime/dimensiune;
-    pozitiex=(getmaxx()-inaltime)/2; //pozitionare patratel
+    pozitiex=(getmaxx()-inaltime)/2; //pozitionare tabla
     pozitiey=(getmaxy()-inaltime)/2;
 
-    for(i=1;i<=dimensiune;i++)//afisare tabla pe coloane din stanga sus
+    for(i=1;i<=dimensiune;i++)//afisare patratele pe coloane din stanga sus
         for(j=1;j<=dimensiune;j++)
             rectangle(pozitiex+latura*(i-1),pozitiey+latura*(j-1),pozitiex+latura*i,pozitiey+latura*j);
 
@@ -150,7 +150,7 @@ void alegeredimensiune(int &dimensiune,int &latime, int&inaltime){
         x=mousex();
         y=mousey();
 
-        if((x>=midx-200 && x<=midx+200 && y>=150 && y<=230)!=0){ //optiuni meniu
+        if((x>=midx-200 && x<=midx+200 && y>=150 && y<=230)!=0){
             dimensiune=4;
             latime=800;
             inaltime=800;
@@ -213,11 +213,15 @@ void meniu(int &alegere){
             break;
         }
 
-        if((x>=midx-200 && x<=midx+200 && y>=350 && y<=430)!=0)
+        if((x>=midx-200 && x<=midx+200 && y>=350 && y<=430)!=0){
             afisarescor();
+            break;
+        }
 
-        if((x>=midx-200 && x<=midx+200 && y>=450 && y<=530)!=0)
+        if((x>=midx-200 && x<=midx+200 && y>=450 && y<=530)!=0){
             closegraph();
+            break;
+        }
         }
     }
 }
@@ -239,6 +243,6 @@ int main(){
     }
     while(!gata);
 
-    getch();
+    closegraph();
     return 0;
 }
