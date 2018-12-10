@@ -41,6 +41,7 @@ void afisarescor(){
     int midx,midy;
     midx=getmaxwidth()/2;
     midy=getmaxheight()/2;
+    cout<<midy;
 
     outtextxy(midx-50,60,"Tabel scor");
 
@@ -66,7 +67,7 @@ void afisarescor(){
         if(j>19) break;
     }
     i--;j--;
-    ip=jp=midy-370;
+    ip=jp=160;
 
     while(i>=0){
         if(a1[i][0]>a1[i][1])
