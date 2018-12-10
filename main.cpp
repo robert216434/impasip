@@ -10,7 +10,6 @@ ifstream gin("pvc.txt");
 ofstream gout("pvc.txt",ios_base::app);
 
 int pozitiex,pozitiey,latime,inaltime,latura,dimensiune,alegere=0;
-bool gata;
 
 void resetarescor(int alegere){
     if(alegere==1){
@@ -41,7 +40,6 @@ void afisarescor(){
     int midx,midy;
     midx=getmaxwidth()/2;
     midy=getmaxheight()/2;
-    cout<<midy;
 
     outtextxy(midx-50,60,"Tabel scor");
 
@@ -117,7 +115,7 @@ void tabla(int dimensiune,int latime,int inaltime){
     int i,j;
 
     latura=latime/dimensiune;
-    pozitiex=(getmaxx()-inaltime)/2; //pozitionare tabla
+    pozitiex=(getmaxx()-inaltime)/2;
     pozitiey=(getmaxy()-inaltime)/2;
 
     for(i=1;i<=dimensiune;i++)//afisare patratele pe coloane din stanga sus
@@ -125,7 +123,6 @@ void tabla(int dimensiune,int latime,int inaltime){
             rectangle(pozitiex+latura*(i-1),pozitiey+latura*(j-1),pozitiex+latura*i,pozitiey+latura*j);
 
 }
-
 
 void alegeredimensiune(int &dimensiune,int &latime, int&inaltime){
     cleardevice();
