@@ -97,20 +97,19 @@ void afisarescor(){
     getch();
 }
 
-void punerePiesa(){
-    int linia,coloana,x,y;
-    if(ismouseclick(WM_LBUTTONDOWN)){
-        clearmouseclick(WM_LBUTTONDOWN);
-        x=mousex();
-        y=mousey();
-        if(!(x>=pozitiex && x<=pozitiex+latime && y>=pozitiey&&y<=pozitiey+inaltime))
-            gata=true;
-        else{
-            linia=(y-pozitiey)/latura+1;
-            coloana=(x-pozitiex)/latura+1;
-            circle(pozitiex+latura*(coloana-1)+latura/2,pozitiey+latura*(linia-1)+latura/2,10);
-        }
-    }
+void punerepiese(int dimensiune,int latime,int inaltime){
+    int linia,coloana,x,y,dimcerc,i,j;
+
+    if(dimensiune==4)dimcerc=40;
+    if(dimensiune==6)dimcerc=30;
+    if(dimensiune==8)dimcerc=20;
+
+    latura=latime/dimensiune;
+    pozitiex=(getmaxx()-inaltime)/2;
+    pozitiey=(getmaxy()-inaltime)/2;
+    for(i=1;i<=dimensiune/2;i++)
+        for(j=1;j<=dimensiune/2;j++)
+        circle(pozitiex+latura*(j-1)+latura/2,pozitiey+latura*(i-1)+latura/2,dimcerc);
 }
 
 void tabla(int dimensiune,int latime,int inaltime){
@@ -185,6 +184,7 @@ void meniu(int &alegere){
     settextstyle(BOLD_FONT,HORIZ_DIR,1);
     outtextxy(midx-20,70,"Impas");
 
+
     rectangle(midx-200,150,midx+200,230);
     outtextxy(midx-100,(150+230)/2-10,"Jucator vs Jucator");
 
@@ -237,13 +237,8 @@ int main(){
         alegeredimensiune(dimensiune,latime,inaltime);
 
     tabla(dimensiune,latime,inaltime);
-
-    gata=false;
-    do{
-    punerePiesa();
-    }
-    while(!gata);
-
+    punerepiese(dimensiune,latime,inaltime);
+    getch();
     closegraph();
     return 0;
 }
