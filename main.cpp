@@ -96,18 +96,27 @@ void afisarescor(){
 }
 
 void punerepiese(int dimensiune,int latime,int inaltime){
-    int linia,coloana,x,y,dimcerc,i,j;
+    int linia,coloana,x,y,dimcerc,i,j,p;
 
-    if(dimensiune==4)dimcerc=40;
-    if(dimensiune==6)dimcerc=30;
-    if(dimensiune==8)dimcerc=20;
+    if(dimensiune==4){
+        dimcerc=40;
+        p=1;
+    }
+    if(dimensiune==6){
+        dimcerc=30;
+        p=2;
+    }
+    if(dimensiune==8){
+        dimcerc=20;
+        p=3;
+    }
 
     latura=latime/dimensiune;
     pozitiex=(getmaxx()-inaltime)/2;
     pozitiey=(getmaxy()-inaltime)/2;
     for(i=1;i<=dimensiune/2;i++)
         for(j=1;j<=dimensiune/2;j++)
-        circle(pozitiex+latura*(j-1)+latura/2,pozitiey+latura*(i-1)+latura/2,dimcerc);
+        circle(pozitiex+latura*(j-1)+latura/2,pozitiey+latura*(i+p)+latura/2,dimcerc);
 }
 
 void tabla(int dimensiune,int latime,int inaltime){
