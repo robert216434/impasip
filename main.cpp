@@ -1,6 +1,6 @@
 #include <iostream>
-#include <graphics.h>
 #include <winbgim.h>
+#include <stdlib.h>
 #include <fstream>
 
 using namespace std;
@@ -9,7 +9,30 @@ ofstream fout("pvp.txt",ios_base::app);
 ifstream gin("pvc.txt");
 ofstream gout("pvc.txt",ios_base::app);
 
-int pozitiex,pozitiey,latime,inaltime,latura,dimensiune,alegere=0;
+#define MAX 20
+#define FUNDAL CYAN
+#define SPATIU 0
+#define PIESA1 BLUE
+#define PIESA2 RED
+
+void iesireUrgenta()
+{
+   char tasta;
+   if (kbhit())
+   {
+     tasta=getch();
+     if (tasta==27)
+        {
+          closegraph();
+         exit(0);
+       }
+  }
+}
+
+int stanga,sus,width,height,latura,numar,alegere;
+bool gata;
+
+int TablaDeJoc[MAX][MAX];
 
 void resetarescor(int alegere){
     if(alegere==1){
@@ -95,46 +118,121 @@ void afisarescor(){
     getch();
 }
 
-void punerepiese(int dimensiune,int latime,int inaltime){
-    int linia,coloana,x,y,dimcerc,i,j,p;
-
-    if(dimensiune==4){
-        dimcerc=40;
-        p=1;
-    }
-    if(dimensiune==6){
-        dimcerc=30;
-        p=2;
-    }
-    if(dimensiune==8){
-        dimcerc=20;
-        p=3;
-    }
-
-    latura=latime/dimensiune;
-    pozitiex=(getmaxx()-inaltime)/2;
-    pozitiey=(getmaxy()-inaltime)/2;
-    for(i=1;i<=dimensiune/2;i++)
-        for(j=1;j<=dimensiune/2;j++)
-        circle(pozitiex+latura*(j-1)+latura/2,pozitiey+latura*(i+p)+latura/2,dimcerc);
+void stergePiesa(int linia, int coloana)
+{
+   int x1,y1,x2,y2,xmijloc,ymijloc;
+   x1=stanga+latura*(coloana-1);
+   y1=sus+latura*(linia-1);
+   x2=x1+latura; y2=y1+latura;
+   xmijloc=(x1+x2)/2; ymijloc=(y1+y2)/2;
+   setcolor(BLUE); rectangle(x1,y1,x2,y2);
+   setcolor(FUNDAL); setfillstyle(SOLID_FILL,FUNDAL);
+   bar(xmijloc-20,ymijloc-20,xmijloc+20,ymijloc+20);
 }
 
-void tabla(int dimensiune,int latime,int inaltime){
-    cleardevice();
-    int i,j;
-
-    latura=latime/dimensiune;
-    pozitiex=(getmaxx()-inaltime)/2;
-    pozitiey=(getmaxy()-inaltime)/2;
-
-    for(i=1;i<=dimensiune;i++)//afisare patratele pe coloane din stanga sus
-        for(j=1;j<=dimensiune;j++)
-            rectangle(pozitiex+latura*(i-1),pozitiey+latura*(j-1),pozitiex+latura*i,pozitiey+latura*j);
-
+void deseneazaPiesa(int linia, int coloana, int codPiesa)
+{
+   int x1,y1,x2,y2,xmijloc,ymijloc;
+   x1=stanga+latura*(coloana-1);
+   y1=sus+latura*(linia-1);
+   x2=x1+latura; y2=y1+latura;
+   xmijloc=(x1+x2)/2; ymijloc=(y1+y2)/2;
+   setcolor(BLUE);
+   rectangle(x1,y1,x2,y2); setcolor(FUNDAL);
+   setfillstyle(SOLID_FILL,FUNDAL);
+   bar(xmijloc-20,ymijloc-20,xmijloc+20,ymijloc+20);
+   setcolor(codPiesa);
+   setfillstyle(SOLID_FILL,codPiesa);
+   fillellipse(xmijloc,ymijloc,18,15);
 }
 
-void alegeredimensiune(int &dimensiune,int &latime, int&inaltime){
+bool inInterior(int x, int y, int x1, int y1, int x2, int y2)
+{
+   return x1<=x && x<=x2 && y1<=y && y<=y2;
+}
+
+void mutarePiesa(int codPiesa)
+{
+   int linia1,coloana1,linia2,coloana2,x,y;
+   int x1, y1, x2, y2;
+   int xmijloc, ymijloc;
+   bool mutareCorecta;
+  do
+   {
+   iesireUrgenta();
+   mutareCorecta=false;
+   if(ismouseclick(WM_LBUTTONDOWN) && inInterior(x=mousex(),y=mousey(),stanga,sus,stanga+width,sus+height))
+   {
+     clearmouseclick(WM_LBUTTONDOWN);
+     // x=mousex(); y=mousey();
+    linia1=(y-sus)/latura+1;
+    coloana1=(x-stanga)/latura+1;
+    // cout<<linia1<<","<<coloana1<<"=>";
+    //circle(stanga+coloana1*latura+latura/2, sus+linia1*latura+latura/2,5);
+    if (TablaDeJoc[linia1][coloana1]==codPiesa)
+    {
+      do
+      {
+        iesireUrgenta();
+        if(ismouseclick(WM_LBUTTONDOWN) && inInterior(x=mousex(),y=mousey(),stanga,sus,stanga+width,sus+height))
+        {
+          clearmouseclick(WM_LBUTTONDOWN);
+          // x=mousex(); y=mousey();
+          linia2=(y-sus)/latura+1;
+          coloana2=(x-stanga)/latura+1;
+          // cout<<linia2<<","<<coloana2<<endl;
+          if (TablaDeJoc[linia2][coloana2]==SPATIU)
+          {
+            mutareCorecta=true;
+            TablaDeJoc[linia1][coloana1]=SPATIU;
+            TablaDeJoc[linia2][coloana2]=codPiesa;
+            stergePiesa(linia1,coloana1);
+            deseneazaPiesa(linia2,coloana2,codPiesa);
+          }
+        }
+      }
+      while (!mutareCorecta);
+    }
+  }
+ }
+ while (!mutareCorecta);
+}
+
+
+void initTabla()
+{
     cleardevice();
+    //numar=numar/2;
+ int linia, coloana;
+ for (linia=1; linia<=numar; linia++)
+     for (coloana=1; coloana<=numar; coloana++)
+         if (rand()%4<2)
+            TablaDeJoc[linia][coloana]=PIESA1;
+         else
+         if (rand()%4<3)
+            TablaDeJoc[linia][coloana]=PIESA2;
+         else
+            TablaDeJoc[linia][coloana]=SPATIU;
+}
+
+void desenTabla()
+{
+   setbkcolor(FUNDAL); cleardevice();
+   int linia,coloana;
+   for (linia=1; linia<=numar; linia++)
+   for (coloana=1; coloana<=numar; coloana++)
+       {
+         if (TablaDeJoc[linia][coloana]==SPATIU)
+            stergePiesa(linia,coloana);
+         else
+            deseneazaPiesa(linia,coloana,TablaDeJoc[linia][coloana]);
+       }
+}
+
+void initializariDimensiuni()
+{
+    numar=0;
+   cleardevice();
     int midx,midy;
     midx=getmaxwidth()/2;
     midy=getmaxheight()/2;
@@ -149,6 +247,7 @@ void alegeredimensiune(int &dimensiune,int &latime, int&inaltime){
 
     rectangle(midx-200,350,midx+200,430);
     outtextxy(midx-15,(350+430)/2-10,"8x8");
+
     int x,y;
     while(true){
     if(ismouseclick(WM_LBUTTONDOWN)!=0){
@@ -157,27 +256,28 @@ void alegeredimensiune(int &dimensiune,int &latime, int&inaltime){
         y=mousey();
 
         if((x>=midx-200 && x<=midx+200 && y>=150 && y<=230)!=0){
-            dimensiune=4;
-            latime=800;
-            inaltime=800;
-            break;
+            numar=4;
+            width=400;
+            height=400;
         }
 
         if((x>=midx-200 && x<=midx+200 && y>=250 && y<=330)!=0){
-            dimensiune=6;
-            latime=800;
-            inaltime=800;
-            break;
+            numar=6;
+            width=600;
+            height=600;
         }
 
         if((x>=midx-200 && x<=midx+200 && y>=350 && y<=430)!=0){
-            dimensiune=8;
-            latime=800;
-            inaltime=800;
-            break;
+            numar=8;
+            width=800;
+            height=800;
         }
-
-        }
+        latura=width/numar;
+        sus=(getmaxy()-width)/2;
+        stanga=(getmaxx()-height)/2;
+    }
+    if(numar!=0)
+    break;
     }
 }
 
@@ -189,7 +289,6 @@ void meniu(int &alegere){
 
     settextstyle(BOLD_FONT,HORIZ_DIR,1);
     outtextxy(midx-20,70,"Impas");
-
 
     rectangle(midx-200,150,midx+200,230);
     outtextxy(midx-100,(150+230)/2-10,"Jucator vs Jucator");
@@ -233,18 +332,24 @@ void meniu(int &alegere){
     }
 }
 
-int main(){
-    initwindow(getmaxwidth(),getmaxheight());
-
-    meniu(alegere);
-    if(alegere==1)
-        alegeredimensiune(dimensiune,latime,inaltime);
-    if(alegere==2)
-        alegeredimensiune(dimensiune,latime,inaltime);
-
-    tabla(dimensiune,latime,inaltime);
-    punerepiese(dimensiune,latime,inaltime);
+int main()
+{
+  initwindow(getmaxwidth(),getmaxheight());
+  meniu(alegere);
+  if(alegere==1){
+    initializariDimensiuni();
+  initTabla();
+  desenTabla();
+  do {
+       mutarePiesa(PIESA1);
+       mutarePiesa(PIESA2);
+  } while (true);
+  }
+  if(alegere==2){
+    initializariDimensiuni();
+    initTabla();
+    desenTabla();
     getch();
-    closegraph();
-    return 0;
+  }
+  return 0;
 }
